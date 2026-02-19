@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
-CONFIG_PATH="/zeroclaw-data/.zeroclaw/config.toml"
+# Pfad korrigiert, damit er mit den Erwartungen von ZeroClaw übereinstimmt
+CONFIG_PATH="/zeroclaw-data/config.toml"
 
-# Only generate config if it doesn't exist or FORCE_CONFIG=true
+# Nur generieren, wenn Config nicht existiert oder FORCE_CONFIG=true gesetzt ist
 if [ ! -f "$CONFIG_PATH" ] || [ "$FORCE_CONFIG" = "true" ]; then
-    mkdir -p /zeroclaw-data/.zeroclaw /zeroclaw-data/workspace
+    # Erstellt nur noch das workspace-Verzeichnis (und zeroclaw-data, falls nicht vorhanden)
+    mkdir -p /zeroclaw-data/workspace
 
     cat > "$CONFIG_PATH" <<EOF
 api_key = "${API_KEY:-}"
@@ -52,5 +54,5 @@ EOF
     echo "Config generated at $CONFIG_PATH"
 fi
 
-# Execute the command passed to the container
+# Führt den an den Container übergebenen Befehl aus
 exec "$@"
