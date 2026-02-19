@@ -12,13 +12,17 @@ RUN apt-get update && apt-get install -y \
 
 # 1. Copy manifests to cache dependencies
 COPY Cargo.toml Cargo.lock ./
-RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN mkdir -p src && echo "fn main() {}" > src/main.rs
 
 # Copy workspace crates if they exist
 COPY crates/ crates/
 
+# Create dummy bench/test files referenced in Cargo.toml
+RUN mkdir -p benches && echo "fn main() {}" > benches/agent_benchmarks.rs
+RUN mkdir -p test_helpers/src && echo "" > test_helpers/src/lib.rs
+
 RUN cargo build --release --locked || cargo build --release
-RUN rm -rf src
+RUN rm -rf src benches test_helpers
 
 # 2. Copy full source and rebuild
 COPY . .
