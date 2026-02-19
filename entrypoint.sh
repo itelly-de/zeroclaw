@@ -1,15 +1,13 @@
 #!/bin/bash
 set -e
 
-# Pfad korrigiert, damit er mit den Erwartungen von ZeroClaw übereinstimmt
 CONFIG_PATH="/zeroclaw-data/config.toml"
 
-# Nur generieren, wenn Config nicht existiert oder FORCE_CONFIG=true gesetzt ist
-if [ ! -f "$CONFIG_PATH" ] || [ "$FORCE_CONFIG" = "true" ]; then
-    # Erstellt nur noch das workspace-Verzeichnis (und zeroclaw-data, falls nicht vorhanden)
-    mkdir -p /zeroclaw-data/workspace
+# Erstelle die benötigten Verzeichnisse
+mkdir -p /zeroclaw-data/workspace
 
-    cat > "$CONFIG_PATH" <<EOF
+# Überschreibe die Config-Datei bei JEDEM Start (keine if-Bedingung mehr)
+cat > "$CONFIG_PATH" <<EOF
 api_key = "${API_KEY:-}"
 default_provider = "${PROVIDER:-openrouter}"
 default_model = "${ZEROCLAW_MODEL:-anthropic/claude-sonnet-4-6}"
@@ -51,8 +49,7 @@ encrypt = true
 provider = "none"
 EOF
 
-    echo "Config generated at $CONFIG_PATH"
-fi
+echo "Config forcefully generated at $CONFIG_PATH"
 
 # Führt den an den Container übergebenen Befehl aus
 exec "$@"
