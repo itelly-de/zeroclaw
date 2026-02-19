@@ -31,7 +31,7 @@ RUN cargo build --release --locked || cargo build --release
 RUN strip target/release/zeroclaw
 
 # ── Stage 2: Runtime with full tooling ──────────────────────────
-FROM debian:bookworm-slim AS runtime
+FROM debian:trixie-slim AS runtime
 
 # Install runtime dependencies:
 # - bash/sh for terminal access
